@@ -1,0 +1,528 @@
+1)	MAXIMUM ELEMENT
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main() {
+    stack<long int> s, m;
+    m.push(-1);
+    int n; cin>>n;
+    int  i = 0;
+    while(i<n){
+        int x;
+        cin>>x;
+        if(x==1){
+            int z ;cin>>z;
+            s.push(z);
+            
+                if(z >= m.top())
+                m.push(z);
+            
+        }
+        else if(x==2){
+            int q = s.top();
+            if(q == m.top())
+                m.pop();
+            s.pop();
+        }
+        else if(x==3){
+            cout << m.top() << endl;
+            //m.pop();
+        }
+        i++;
+    }
+
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    return 0;
+}
+
+
+
+2)	EQUAL STACKS
+
+
+
+import java.io.*;
+import java.math.*;
+import java.text.*;
+import java.util.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        int size1 = scan.nextInt();
+        int size2 = scan.nextInt();    
+        int size3 = scan.nextInt();
+        
+        Queue<Integer> stack1 = new LinkedList<>();
+        Queue<Integer> stack2 = new LinkedList<>();
+        Queue<Integer> stack3 = new LinkedList<>();
+        int total1 = 0;
+        int total2 = 0;
+        int total3 = 0;
+        
+        for(int i = 0;i<size1;i++){
+            int value = scan.nextInt();
+            stack1.add(value);
+            total1+=value;
+        }
+        
+        for(int i = 0;i<size2;i++){
+            int value = scan.nextInt();
+            stack2.add(value);
+            total2+=value;
+        }
+        
+        for(int i = 0;i<size3;i++){
+            int value = scan.nextInt();
+            stack3.add(value);
+            total3+=value;
+        }
+        
+        while(!((total1==total2)&&(total2==total3)&&(total1==total3))){
+            if(total1>=total2 && total1>=total3){
+                total1 -=stack1.remove();
+            }else if(total2 >=total1 && total2>=total3){
+                total2 -=stack2.remove();
+            }else{
+                total3 -=stack3.remove();
+            }
+        }
+        System.out.println(total1);
+    }
+}
+
+
+
+3)	GAME OF TWO STACKS 
+
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){ 
+    int g;
+    cin >> g;    
+    for(int a0 = 0; a0 < g; a0++){
+        int n;
+        int m;
+        int x;
+        cin >> n >> m >> x;
+        
+        vector<int> a(n);
+        for(int a_i = 0; a_i <n; a_i++){
+           cin >> a[a_i];
+        }
+        
+        vector<int> b(m);
+        for(int b_i =0; b_i <m; b_i++){
+           cin >> b[b_i];
+        }
+        
+        int sum=0,count=0,temp=0,i=0,j=0;        
+        
+        while(i<n && sum+a[i]<=x){    //considering only first stack and calculating count
+            sum+=a[i];
+            i++;
+        }
+        count=i;        
+       
+        while(j<m && i>=0){          //now adding one element of second stack at a time and subtracting the top element of first stack and calculating the count   
+            sum+=b[j];             
+            j++;
+            while(sum>x && i>0){
+                i--;
+                sum-=a[i];
+            }
+            if(sum<=x && i+j>count)
+                count=i+j;
+        }
+        cout<<count<<endl;
+    } 
+    return 0;
+}
+
+
+4)	 LARGEST RECTANGLE 
+
+
+// Complete the largestRectangle function below.
+ static long largestRectangle(int[] h) {
+        Stack<Integer> stack = new Stack<>();
+        int i=0;
+        long max = 0;
+        while(i<h.length){
+            if(stack.isEmpty() || h[i] >= h[stack.peek()]){
+                stack.push(i);
+                i++;
+            }else{
+                int top = stack.peek();
+                stack.pop();
+                if(stack.isEmpty()){
+                    max = Math.max(max,(long)h[top]*i);
+                }else{
+                    max = Math.max(max,(long)h[top]*(i-stack.peek()-1));
+                }
+            }
+        }
+        while(!stack.isEmpty()){
+                int top = stack.peek();
+                stack.pop();
+                if(stack.isEmpty()){
+                    max = Math.max(max,(long)h[top]*i);
+                }else{
+                    max = Math.max(max,(long)h[top]*(i-stack.peek()-1));
+                }
+        }
+        return max;
+    }
+
+
+5)	 SIMPLE TEXT EDITOR 
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main() {
+    int N;
+    cin>>N;
+    stack<string>stk;
+    string st;
+    while(N--){
+        int n; cin>>n;
+        if(n==1){
+            string str;
+            cin>>str;
+            stk.push(st); 
+            st+=str;
+        }
+        else if(n==2){
+            int k;cin>>k;
+             stk.push(st);
+            st.erase(st.size()-k);
+        }
+        else if(n==3){
+            int k;cin>>k;
+            cout<<st[k-1]<<endl; 
+        }
+        else{
+            st = stk.top();  
+            stk.pop();
+        }
+        
+    }
+return 0;
+}
+
+
+6)	 POISONOUS PLANTS 
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+
+    int n;
+    cin >> n;
+    int *p = new int [n];
+    for(int i=0;i<n;i++)
+        cin >> p[i];
+    
+    stack<int> st;
+    int *killer = new int [n];//which killed i
+    int *daycount = new int [n];//how long i can exist
+    int *killcount = new int [n];//how many i killed
+    for(int i=0;i<n;i++)
+    {
+        daycount[i] = 0;
+        killcount[i] = 0;
+    }
+    
+    for(int i=0;i<n;i++)
+     {        
+        while(!st.empty() && p[i]<=p[st.top()])
+            st.pop();
+        
+        if(st.empty())
+        {
+            killer[i] = -1;
+            daycount[i] = -1;
+        }
+        else
+        {
+            killer[i] = st.top();
+            killcount[killer[i]]++;
+            daycount[i] += killcount[killer[i]];
+            daycount[st.top()]--;
+            if(killer[st.top()]>=0 && daycount[st.top()]<=0)
+                st.pop();
+        }
+        
+        st.push(i);       
+    }
+   
+    int max = -1;
+    for(int i=0;i<n;i++)
+        if(max<killcount[i])
+            max = killcount[i];
+    
+    cout << max << endl;
+    
+    return 0;
+}
+
+
+7)	AND xor OR
+
+
+
+#include<iostream>
+#include<stack>
+#include<vector>
+using namespace std;
+int main()
+{    vector <long int> v;
+    stack <long int> s;
+    long int temp,i,n;
+    long long max_xor=0,min_xor;
+    cin>>n;
+    for(i=0;i<n;i++)
+    {
+        cin>>temp;
+        v.push_back(temp);
+    }
+    for(i=0;i<n;i++)
+    {
+        while(!s.empty())
+        {
+            min_xor=v[i]^s.top();
+            if(min_xor>max_xor)
+            max_xor=min_xor;
+            if(v[i]<s.top())
+            s.pop();
+            else
+            break;
+        }
+        s.push(v[i]);
+    }
+    cout<<max_xor<<endl;
+}
+
+
+
+8)	WAITER 
+
+import java.io.*;
+import java.math.*;
+import java.text.*;
+import java.util.*;
+import java.util.regex.*;
+
+public class Solution {
+  static void solution() {
+      List<Integer> primeList = generatePrimeNumbers(10000);
+
+      try {
+          BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+          String tmp[] = input.readLine().split(" ");
+          int n = Integer.parseInt(tmp[0]);
+          int q = Integer.parseInt(tmp[1]);
+
+          StringBuilder out = new StringBuilder();
+          Stack<Integer> values = new Stack<>();
+          ArrayDeque<Integer> A = new ArrayDeque<>();
+          Stack<Integer> B = new Stack<>();
+
+          tmp = input.readLine().split(" ");
+          for (int i = 0; i < n; i++) {
+              A.add(Integer.parseInt(tmp[i]));
+          }
+
+          int ith = 0;
+          int cnt, val, prime;
+          Stack<Integer> stackB = new Stack<>();
+          while(ith < q) {
+              cnt = A.size();
+              while(cnt-- > 0) {
+                  values.push(A.poll());
+              }
+              prime = primeList.get(ith++);
+              cnt = values.size();
+              while(cnt-- > 0) {
+                  val = values.pop();
+                  if (val % prime == 0) {
+                      B.push(val);
+                  } else {
+                      A.add(val);
+                  }
+              }
+              while(!B.empty()) {
+                  out.append(B.pop()).append("\n");
+              }
+          }
+          cnt = A.size();
+          while(cnt-- > 0) {
+              out.append(A.pollLast()).append("\n");
+          }
+          System.out.println(out.toString());
+
+          input.close();
+      } catch (IOException e) {
+          System.out.println(e);
+      }
+  }
+
+  public static ArrayList<Integer> generatePrimeNumbers(int limit) {
+      ArrayList<Boolean> bools = new ArrayList<Boolean>();
+      ArrayList<Integer> primes = new ArrayList<Integer>();
+
+      // Generate a list of booleans all set to true initially
+      // the array is indexed from 2 to limit representing all numbers
+      // e.g. [true, true, true, true] = [2, 3, 4, 5]
+
+      for (int i = 1; i< limit; i++) {
+          bools.add(true);
+      }
+
+      // loop from 2 to limit setting the composite numbers to false
+      // we start from 2 because we know 1 is not a prime number
+      int cnt = 0;
+      for (int i = 2; i < limit; i++) {
+          if (bools.get(i - 2)) {
+              for (int j = i * 2; j <= limit; j+= i) {
+                  bools.set(j - 2, false);
+              }
+          }
+      }
+
+      // now generate the list of primes only where
+      // there is a true value in the bools array.
+      int i = 2;
+      for (Boolean isPrimeNum : bools) {
+          if (isPrimeNum) {
+              primes.add(i);
+          }
+          i++;
+      }
+      return primes;
+  }
+
+  public static void main(String[] args) {
+    solution();
+  }
+}
+
+
+9)	BALANCED BRACKETS
+
+
+#include <stack>
+#include <string>
+#include <iostream>
+
+using namespace std;
+
+string isBalanced(string s) {
+    stack<char> st;  
+    
+    for (auto c: s) {
+        switch (c) {
+            case '{':
+            case '(':
+            case '[':
+                st.push(c);
+                break;
+            case '}':
+                if (st.empty() || (st.top() != '{')) {
+                    return "NO";
+                }
+                st.pop();
+                break;
+            case ')':
+                if (st.empty() || (st.top() != '(')) {
+                    return "NO";
+                }
+                st.pop();
+                break;
+            case ']':
+                if (st.empty() || (st.top() != '[')) {
+                    return "NO";
+                }
+                st.pop();
+                break;
+        }
+    }
+    
+    return st.empty() ? "YES" : "NO";
+}
+
+int main(){
+    int t;
+    cin >> t;
+    for(int a0 = 0; a0 < t; a0++){
+        string s;
+        cin >> s;
+        cout << isBalanced(s) << endl;
+    }
+    return 0;
+}
+
+
+10)	GAME OF TWO STACKS 
+
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){ 
+    int g;
+    cin >> g;    
+    for(int a0 = 0; a0 < g; a0++){
+        int n;
+        int m;
+        int x;
+        cin >> n >> m >> x;
+        
+        vector<int> a(n);
+        for(int a_i = 0; a_i <n; a_i++){
+           cin >> a[a_i];
+        }
+        
+        vector<int> b(m);
+        for(int b_i =0; b_i <m; b_i++){
+           cin >> b[b_i];
+        }
+        
+        int sum=0,count=0,temp=0,i=0,j=0;        
+        
+        while(i<n && sum+a[i]<=x){    //considering only first stack and calculating count
+            sum+=a[i];
+            i++;
+        }
+        count=i;        
+       
+        while(j<m && i>=0){          //now adding one element of second stack at a time and subtracting the top element of first stack and calculating the count   
+            sum+=b[j];             
+            j++;
+            while(sum>x && i>0){
+                i--;
+                sum-=a[i];
+            }
+            if(sum<=x && i+j>count)
+                count=i+j;
+        }
+        cout<<count<<endl;
+    } 
+    return 0;
+}
+
+
+
+
+
+
