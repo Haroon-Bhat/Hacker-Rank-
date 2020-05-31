@@ -1,0 +1,474 @@
+1)	PRINT ELEMENTS OF LL
+
+void printLinkedList(SinglyLinkedListNode* head) {
+while(head!=NULL)
+{
+    cout<<head->data<<endl;
+    head=head->next;
+}
+
+}
+
+2)	INSERT A NODE AT THE TAIL  OF LL
+
+
+
+// Complete the insertNodeAtTail function below.
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+SinglyLinkedListNode* insertNodeAtTail(SinglyLinkedListNode* head, int data) {
+SinglyLinkedListNode * temp = new SinglyLinkedListNode(data);
+
+temp->data=data;
+temp->next=NULL;
+
+if(head == NULL)
+{
+    head=temp;
+    
+}
+else
+{
+    SinglyLinkedListNode *last=head;
+while(last->next != NULL)
+    last=last->next;
+
+    last->next=temp;
+}
+return (head);
+}
+
+
+3)	INSERT A NODE AT THE HEAD OF THE LL
+
+
+
+// Complete the insertNodeAtHead function below.
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+SinglyLinkedListNode* insertNodeAtHead(SinglyLinkedListNode* llist, int data) {
+
+SinglyLinkedListNode* temp = new SinglyLinkedListNode(data) ;
+temp->data = data;
+temp->next = NULL;
+
+if(llist == NULL){
+    llist = temp;
+}else{
+    temp->next = llist;
+    llist = temp;
+}
+return llist;
+}
+
+
+4)	INSERT A NODE AT A SPECIFIC POSITION
+
+
+
+// Complete the insertNodeAtPosition function below.
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+SinglyLinkedListNode* insertNodeAtPosition(SinglyLinkedListNode* head, int data, int position) {
+
+int k=0;
+SinglyLinkedListNode *temp = new SinglyLinkedListNode(data);
+
+temp->data=data;
+temp->next=NULL;
+if(head==NULL)
+{
+    head=temp;
+
+}
+if(position == 0)
+{
+    temp->next=head;
+}
+    SinglyLinkedListNode *temp1 = head;
+while(position-1>0)
+{
+
+    temp1=temp1->next;
+    position--;
+}
+temp->next=temp1->next;
+temp1->next=temp;
+
+return head;
+}
+
+
+5)	DELETE A NODE 
+
+
+
+// Complete the deleteNode function below.
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+SinglyLinkedListNode* deleteNode(SinglyLinkedListNode* head, int position) {
+
+if(head == NULL)
+{
+    return NULL;
+}
+SinglyLinkedListNode *temp = head;
+if(position == 0)
+{
+    head=temp->next;
+    return head;
+    delete temp;
+}
+
+for(int i=0;temp->next!=NULL && i<position-1;i++)
+    temp=temp->next;
+
+
+SinglyLinkedListNode *temp1 =temp->next->next;
+delete(temp->next);
+temp->next=temp1;
+
+return head;
+
+}
+
+
+6)	PRINT IN REVERSE
+
+
+
+// Complete the reversePrint function below.
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+void reversePrint(SinglyLinkedListNode* head) {
+
+    
+    // if(head == NULL)
+    // return;
+    
+    //     reversePrint(head->next);
+    //     cout<<head->data<<endl;
+
+if(head==NULL)
+return ;
+reversePrint(head->next);
+cout<<head->data<<endl;
+
+}
+
+7)	REVERSE A LL
+
+
+
+// Complete the reverse function below.
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+SinglyLinkedListNode* reverse(SinglyLinkedListNode* head) {
+  SinglyLinkedListNode *prev=NULL;
+  SinglyLinkedListNode *current1=head;
+  SinglyLinkedListNode *next=NULL;
+  while(current1!=NULL)
+  {
+    next=current1->next;
+    current1->next=prev;
+    prev=current1;
+    current1=next;
+
+  }
+
+  head=prev;
+
+  return head;
+
+
+}
+
+8)	COMPARE TWO LL
+
+
+
+// Complete the compare_lists function below.
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+bool compare_lists(SinglyLinkedListNode* head1, SinglyLinkedListNode* head2) {
+
+while(head1!=NULL && head2!=NULL)
+{
+    if(head1->data!=head2->data)
+    return false;
+    head1=head1->next;
+    head2=head2->next;
+}
+
+return (head1==NULL && head2==NULL);
+
+
+}
+
+9)	MERGE TWO SORTED LL
+
+
+
+// Complete the mergeLists function below.
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+SinglyLinkedListNode* mergeLists(SinglyLinkedListNode* head1, SinglyLinkedListNode* head2) {
+SinglyLinkedListNode* temp;
+
+if(head1==NULL&&head2==NULL){
+    return NULL;
+
+}
+
+if(head1==NULL) return head2;
+if(head2==NULL) return head1;
+
+if(head1->data<head2->data){
+    head1->next=mergeLists(head1->next,head2);
+    return head1;
+}
+
+else{
+   head2->next=mergeLists(head2->next,head1);
+    return head2;
+}
+}
+
+10)	 GET NODE VALUE 
+
+
+
+
+// Complete the getNode function below.
+
+/*
+ * For your reference:
+ *
+ * SinglyLinkedListNode {
+ *     int data;
+ *     SinglyLinkedListNode* next;
+ * };
+ *
+ */
+int getNode(SinglyLinkedListNode* head, int & positionFromTail) {
+   
+  if (head == NULL)
+        return 0;
+
+    int answer = getNode(head->next, positionFromTail);
+    if (positionFromTail == -1) {
+        return answer;
+    } else {    
+        --positionFromTail;
+        return head->data;
+    }
+ 
+}
+
+
+11)	CYCLE DETECTION
+
+
+bool has_cycle(SinglyLinkedListNode* head) {
+
+ if(head == NULL)    return false;
+    
+    SinglyLinkedListNode* slow = head;
+    SinglyLinkedListNode* fast = head->next;
+    
+    while(fast != NULL && fast->next != NULL)
+    {
+        slow = slow->next;
+        fast = fast->next->next;
+        
+        if(fast == slow)    return true;
+    }
+    
+    return false;
+}
+
+
+12)	FIND MERGE POINT OF TWO LL
+
+int findMergeNode(SinglyLinkedListNode* head1, SinglyLinkedListNode* head2) {
+
+// Complete this function
+// Do not write the main method. 
+int c1=0,c2=0;
+
+SinglyLinkedListNode *p=head1,*q=head2;
+while(p!=NULL){
+    p=p->next;
+    c1++;
+}
+while(q!=NULL){
+    q=q->next;
+    c2++;
+}
+if(c2>c1){
+    p=head1;
+    q=head2;
+    for(int i=0;i<(c2-c1);i++){
+        q=q->next;
+    }
+    while(p!=q){
+        p=p->next;
+        q=q->next;
+    }
+    return q->data;
+}else{
+    p=head1;
+    q=head2;
+    for(int i=0;i<(c1-c2);i++){
+        p=p->next;
+    }
+    while(p!=q){
+        p=p->next;
+        q=q->next;
+    }
+    return p->data;
+}
+}
+
+
+13)	INSERTING A NODE INTO A SORTED DOUBLY LL
+
+DoublyLinkedListNode* sortedInsert(DoublyLinkedListNode* head, int data) {
+if(head==NULL)
+    { 
+        DoublyLinkedListNode* temp=new DoublyLinkedListNode(data);
+        head=temp;
+    }
+    else if(head->data>=data)
+    { 
+        DoublyLinkedListNode* newnode= new DoublyLinkedListNode(data);
+        newnode->prev=NULL;
+        newnode->next=head;
+        head->prev=newnode;
+        head=newnode;
+    }
+    else
+    { 
+        DoublyLinkedListNode* newnode=new DoublyLinkedListNode(data);
+        DoublyLinkedListNode* temp=head;
+        while(temp==NULL || temp->next->data<data)
+        {
+            if(temp->next->data>data || temp->next->next==NULL)
+            {
+                temp=temp->next;
+                break;
+            }
+            temp=temp->next;
+        }
+        if(temp->next!=NULL)
+        {
+            DoublyLinkedListNode* t=temp;
+            t=t->next;
+            temp->next=newnode;
+            t->prev=newnode;
+            newnode->next=t;
+            newnode->prev=temp;
+        }
+        else
+        {
+            temp->next=newnode;
+            newnode->prev=temp;
+            newnode->next=NULL;
+        }
+    }
+    return head;
+
+}
+
+
+14)	REVERSE A DOUBLY LL
+
+   static DoublyLinkedListNode reverse(DoublyLinkedListNode curr) {
+
+ DoublyLinkedListNode temp = curr.next;
+    curr.next = curr.prev;
+    curr.prev = temp;
+    return temp == null ? curr : reverse(temp);
+    }
+
+
+15)	DELETE  A DUPLICATE VALUE NODE FROM A SORTED LL
+
+   static SinglyLinkedListNode removeDuplicates(SinglyLinkedListNode head) {
+ if(head==null || head.next==null) return head;
+    SinglyLinkedListNode root = head;
+    while(head.next!=null){
+       if(head.data!=head.next.data){
+           head = head.next;
+       }else{
+           head.next = head.next.next;
+       }
+    }
+    return root;
+
+    }
+
