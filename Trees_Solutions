@@ -1,0 +1,880 @@
+1)	PRE ORDER TRAVERSAL
+
+void preOrder(Node *root) {
+        if(root==NULL)
+        return;
+        cout<<root->data<<" ";
+        preOrder(root->left);
+        preOrder(root->right);
+        
+
+    }
+
+2)	LEVEL ORDER TRAVERSAL 
+
+
+void my_level_order(Node* root, int lvl)
+    {
+        if (!root)  return;
+        if (lvl==0) cout << root->data << " ";
+        else
+        {
+            my_level_order(root->left, lvl-1);
+            my_level_order(root->right, lvl-1);
+        }
+    }
+    int get_height(Node* root)
+    {
+        if (!root)  return -1;
+        return max(get_height(root->left)+1, get_height(root->right)+1);
+    }
+    void levelOrder(Node * root) {
+        int  h = get_height(root);
+        for (int i=0;i<=h;i++)
+            my_level_order(root, i);
+    }
+
+3)	 POST ORDER TRAVERSAL
+
+
+    void postOrder(Node *root) {
+        if(root == NULL)
+        return;
+        postOrder(root->left);
+          postOrder(root->right);
+        cout<<root->data<<" ";
+        
+      
+
+    }
+
+4)	 INORDER TRAVERSAL
+
+   void inOrder(Node *root) {
+        if(root == NULL)
+        return;
+        inOrder(root->left);
+        cout<<root->data<<" ";
+        inOrder(root->right);
+
+    }
+
+5)	HEIGHT OF A BINARY TREE
+
+static int height(Node* root) {
+        // Write your code here.
+        
+    if (root == NULL)  
+        return 0;  
+        if(root->left == NULL && root->right == NULL)
+        return 0;
+    else
+    {  
+        /* compute the depth of each subtree */
+        int lDepth = height(root->left);  
+        int rDepth = height(root->right);  
+      
+        /* use the larger one */
+        if (lDepth > rDepth)  
+            return(lDepth + 1);  
+        else return(rDepth + 1);  
+    }  
+        
+        }
+    
+
+6)	TOP VIEW 
+
+
+#include<bits/stdc++.h>
+
+using namespace std;
+
+class Node {
+    public:
+        int data;
+        Node *left;
+        Node *right;
+        Node(int d) {
+            data = d;
+            left = NULL;
+            right = NULL;
+        }
+};
+
+class Solution {
+    public:
+        Node* insert(Node* root, int data) {
+            if(root == NULL) {
+                return new Node(data);
+            } else {
+                Node* cur;
+                if(data <= root->data) {
+                    cur = insert(root->left, data);
+                    root->left = cur;
+                } else {
+                    cur = insert(root->right, data);
+                    root->right = cur;
+               }
+
+               return root;
+           }
+        }
+
+/*
+class Node {
+    public:
+        int data;
+        Node *left;
+        Node *right;
+        Node(int d) {
+            data = d;
+            left = NULL;
+            right = NULL;
+        }
+};
+
+*/
+
+    void topView(Node * root) {
+
+        if (!root)  return;
+
+        map<Node*, int> hd;
+        map<int, int> m;
+        deque<Node*> q;
+        q.push_back(root);
+
+        hd[root]=0;
+        m[hd[root]]=root->data;
+        while(!q.empty())
+        {
+            if (root->left)
+            {
+                hd[root->left] = hd[root]-1;
+                if (!m[hd[root->left]]) m[hd[root->left]] = root->left->data;
+                q.push_back(root->left);
+            }
+            if (root->right)
+            {
+                hd[root->right] = hd[root]+1;
+                if (!m[hd[root->right]]) m[hd[root->right]] = root->right->data;
+                q.push_back(root->right);            
+            }
+            q.pop_front();
+            if (q.size())   root = q.front();
+        }
+        map<int, int>::iterator it = m.begin();
+
+        while(it!=m.end())
+        {
+            cout << it->second << " ";
+            it++;
+        }
+    }
+    
+}; //End of Solution
+
+
+7)	BINARY SEARCH TREE : INSERTION
+
+
+
+
+/*
+Node is defined as 
+
+class Node {
+    public:
+        int data;
+        Node *left;
+        Node *right;
+        Node(int d) {
+            data = d;
+            left = NULL;
+            right = NULL;
+        }
+};
+
+*/
+
+   static  Node * insert(Node * root, int data) {
+
+  if(root == NULL)
+  {
+      Node* node = new Node(data);
+      node->data=data;
+      node->right=NULL;
+      node->left=NULL;
+      root=node;
+  }else
+  if(root->data>data)
+  root->left=insert(root->left,data);
+  else
+  if(root->data<data)
+  root->right=insert(root->right,data);
+
+        return root;
+    }
+
+
+8)	TREE: HUFFMAN CODING 
+
+
+void decode(String encoding, Node root) {
+    StringBuilder result = new StringBuilder();
+    Node curr = root;
+    for (char ch: encoding.toCharArray()) {
+        curr = ch == '0' ? curr.left : curr.right;
+        if (curr.data != '\0') {
+            result.append(curr.data);
+            curr = root;
+        } 
+    }
+    System.out.println(result);
+}
+
+
+9)	BINARY SEARCH TREE : LOWEST COMMON ANCESTOR 
+
+    public static Node lca(Node root, int v1, int v2) {
+        // Write your code here.
+           Node temp = root; // not necessary, just use root, just a leftover from a different attempt.
+    
+    while (true) {
+        if (temp.data > v1 && temp.data > v2) {
+            temp = temp.left;
+        } else if (temp.data < v1 && temp.data < v2) {
+            temp = temp.right;
+        } else {
+            return temp;
+        }
+    }
+    }
+
+10)	 SWAP NODES {ALGO]
+
+
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+class Node {
+        int data;
+        int depth;
+        Node left, right;
+        Node(int data, int depth){
+            this.data = data;
+            this.depth = depth;
+        }
+    }
+
+public class Solution {
+    public static void swap_nodes(Node root, int K){
+        /*Queue<Node> nodes = new LinkedList<Node>();
+        nodes.offer(root);
+        Node cur;
+        while (!nodes.isEmpty()){
+            cur = nodes.poll();
+            if (cur.depth%K == 0){
+                Node tmp = cur.left;
+                cur.left = cur.right;
+                cur.right = tmp;
+            }
+            if (cur.left != null) nodes.offer(cur.left);
+            if (cur.right != null) nodes.offer(cur.right);
+        }*/
+        if (root != null){
+            if (root.depth%K == 0){
+                Node tmp = root.left;
+                root.left = root.right;
+                root.right = tmp;
+            }
+            swap_nodes(root.left, K);
+            swap_nodes(root.right, K);
+        }
+    }
+    
+    public static void inorder_print(Node root){
+        if (root != null){
+            inorder_print(root.left);
+            System.out.print(root.data+" ");
+            inorder_print(root.right);
+        }
+    }
+    
+    public static void print_nodes(Node root, int K){
+        swap_nodes(root, K);
+        inorder_print(root);
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        /* Enter your code here. Read input from STDIN. Print output to STDOUT. Your class should be named Solution. */
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        Node root = new Node(1, 1);
+        Node cur = root;
+        Queue<Node> nodes = new LinkedList<Node>();
+        nodes.offer(cur);
+        while (N-->0){
+            cur = nodes.poll();
+            int leftData = sc.nextInt();
+            int rightData = sc.nextInt();
+            cur.left = (leftData==-1)? null: new Node(leftData, cur.depth+1);
+            cur.right = (rightData==-1)? null: new Node(rightData, cur.depth+1);
+            if (cur.left != null && cur.left.data!= -1) 
+                nodes.offer(cur.left);
+            if (cur.right != null && cur.right.data!=-1) 
+                nodes.offer(cur.right);
+        }
+        int T = sc.nextInt();
+        while (T-->0){
+            int K = sc.nextInt();
+            print_nodes(root, K);
+        }
+    }
+}
+
+
+11)	KITTYS CALCULATIONS  ON A TREE 
+
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int MOD=1000000007;
+int N, Q;
+vector<int> adj[200001];
+vector<int> adj2[200001];
+int P[18][200001];
+int depth[200001];
+int in[200001];
+int out[200001];
+int now;
+int A[400001];
+int mul[200001];
+long long sum[200001];
+
+void dfs(int u, int p)
+{
+    P[0][u]=p;
+    for(int i=1; i<18; i++)
+        P[i][u]=P[i-1][P[i-1][u]];
+    in[u]=++now;
+    for(auto& v: adj[u]) if(v!=p)
+    {
+        depth[v]=depth[u]+1;
+        dfs(v, u);
+    }
+    out[u]=now;
+}
+
+int lca(int u, int v)
+{
+    if(depth[u]<depth[v])
+        swap(u, v);
+    for(int i=17; i>=0; i--) if(depth[P[i][u]]>=depth[v])
+        u=P[i][u];
+    if(u==v)
+        return u;
+    for(int i=17; i>=0; i--) if(P[i][u]!=P[i][v])
+        u=P[i][u], v=P[i][v];
+    return P[0][u];
+}
+
+int dfs2(int u, long long tot)
+{
+    int ret=0;
+    sum[u]=u*mul[u];
+    for(auto& v: adj2[u])
+    {
+        ret=(ret+dfs2(v, tot))%MOD;
+        sum[u]+=sum[v];
+    }
+    for(auto& v: adj2[u])
+        ret=(ret+1LL*((tot-sum[v])%MOD)
+                    *(sum[v]%MOD)%MOD
+                    *(depth[v]-depth[u])%MOD)%MOD;
+    return ret;
+}
+
+int main()
+{
+    scanf("%d%d", &N, &Q);
+    for(int i=0; i<N-1; i++)
+    {
+        int a, b;
+        scanf("%d%d", &a, &b);
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+    dfs(1, 1);
+    while(Q--)
+    {
+        int K;
+        scanf("%d", &K);
+        long long tot=0;
+        for(int i=0; i<K; i++)
+            scanf("%d", A+i), mul[A[i]]=1, tot+=A[i];
+        sort(A, A+K, [](int a, int b) {
+            return in[a]<in[b];
+        });
+        for(int i=0; i<K-1; i++)
+            A[i+K]=lca(A[i], A[i+1]);
+        sort(A, A+2*K-1);
+        int M=unique(A, A+2*K-1)-A;
+        sort(A, A+M, [](int a, int b) {
+            return out[a]-in[a]>out[b]-in[b];
+        });
+        int root=A[0];
+        map<int, int> m;
+        m[in[root]]=root;
+        for(int i=1; i<M; i++)
+        {
+            int u=A[i];
+            auto it=m.upper_bound(in[u]);
+            assert(it!=m.begin());
+            --it;
+            int p=it->second;
+            adj2[p].push_back(u);
+            //printf("%d -> %d\n", p, u);
+            m[in[u]]=u;
+            if(out[u]<out[p] && (!m.count(out[u]+1) || P[0][m[out[u]+1]]!=p))
+                m[out[u]+1]=p;
+        }
+        printf("%d\n", dfs2(root, tot));
+        for(int i=0; i<M; i++)
+            adj2[A[i]].clear(), mul[A[i]]=0;
+    }
+    return 0;
+}
+
+
+
+12)	 IS THIS A BINARY TREE?
+
+/* Hidden stub code will pass a root argument to the function below. Complete the function to solve the challenge. Hint: you may want to write one or more helper functions.  
+
+The Node struct is defined as follows:
+	struct Node {
+		int data;
+		Node* left;
+		Node* right;
+	}
+*/
+	bool check(Node * node, const size_t& min, const size_t& max)
+{
+    if(node)
+    {
+        if(!((node->data > min) && (node->data < max)))
+        {
+            return false;
+        }
+        else
+        {
+            return (check(node->left, min, node->data) && check(node->right, node->data, max));
+        }
+    }
+
+    return true;
+}
+
+bool checkBST(Node* root) 
+{
+    if(root)
+    {
+        return (check(root->left, 0, root->data) && check(root->right, root->data, -1));
+    }
+    else
+    {
+        return true;
+    }
+}
+
+
+13)	SQUARE TEN TREE
+
+#include <bits/stdc++.h>
+using namespace std;
+
+const int N = 1000 * 1000 + 5;
+char L[N], R[N], M[N];
+int n;
+
+vector < pair<int,string> > split_prefix(char *t) {
+    int len = 1;
+    int lev = 0;
+    int rg = n - 1;
+
+    vector < pair<int,string> > res;
+    while (rg >= 0) {
+        int lf = max(0, rg - len + 1);
+        int fnz = -1;
+        for (int i = lf; i <= rg; ++i)
+            if (t[i] != '0') {
+                fnz = i;
+                break;
+            }
+        if (fnz != -1)
+            res.push_back(make_pair(lev, string(t + fnz, rg - fnz + 1)));
+        len += len;
+        if (lev == 0) len = 1;
+        lev++;
+        rg = lf - 1;
+    }
+    reverse(res.begin(), res.end());
+    return res;
+}
+
+int main() {
+    scanf("%s%s", L, R);
+    n = strlen(R);
+    int m = strlen(L);
+    for (int i = 0; i < n; ++i) {
+        L[n - i - 1] = (m - i - 1 < 0 ? '0' : L[m - i - 1]);
+        M[i] = '0';
+    }
+    for (int i = n - 1; i >= 0; --i) {
+        if (L[i] != '0') {
+            L[i]--;
+            break;
+        }
+        L[i] = '9';
+    }
+
+    int lcp = 0;
+    while (lcp < n && L[lcp] == R[lcp]) 
+        ++lcp;
+
+    vector < pair<int, string> > res, tmp;
+    int rg = n - 1;
+    int len = 1;
+    int lev = 0;
+    while (rg >= 0) {
+        int lf = max(0, rg - len + 1);
+
+        if (lf <= lcp) break;
+
+        int fnz = -1;
+        for (int i = lf; i <= rg; ++i) {
+            M[i] = R[i];
+            R[i] = '0';
+        }
+
+        rg = lf - 1;
+        len += len;
+        if (lev == 0) len = 1;
+        lev++;
+    }
+
+    int rem = 0;
+    for (int i = n - 1; i >= 0; --i) {
+        R[i] += rem - L[i];
+        rem = 0;
+        if (R[i] < 0) {
+            rem = -1;
+            R[i] += 10;
+        }
+        R[i] += '0';
+    }
+
+    res = split_prefix(R);
+    reverse(res.begin(), res.end());
+    tmp = split_prefix(M);
+    for (int i = 0; i < tmp.size(); ++i)
+        res.push_back(tmp[i]);
+
+    printf("%d\n", res.size());
+    for (int i = 0; i < res.size(); ++i)
+        printf("%d %s\n", res[i].first, res[i].second.c_str());
+    return 0;
+}
+
+
+14)	 BALANCED FOREST 
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+typedef long long ll;
+#define eb emplace_back
+
+const int maxn = 5e4 + 5;
+int n, root = 0; ll tot, ans;
+vector<ll> sums(maxn);
+vector<vector<int>> adj;
+set<ll> path, done;
+
+inline bool has(set<ll>& s, ll val) {
+    return (s.find(val) != s.end());
+}
+void sizes(int v, int p = -1) {
+    for (int u : adj[v]) {
+        if (u == p) continue;
+        sizes(u, v);
+        sums[v] += sums[u];
+    }
+}
+void dfs(int v, int p = -1) {
+    ll curr = sums[v];
+    if (3 * curr >= tot) {
+        if (has(done, curr) ||
+                has(done, tot - 2 * curr) ||
+                has(path, 2 * curr) ||
+                has(path, tot - curr))
+            ans = min(ans, (3 * curr - tot));
+    }
+    ll temp = (tot - curr) / 2;
+    if ((tot - curr) % 2 == 0 && temp >= curr) {
+        if (has(done, temp) || has(path, temp + curr))
+            ans = min(ans, (temp - curr));
+    }
+    path.insert(curr);
+    for (int u : adj[v])
+        if (u != p) dfs(u, v);
+    path.erase(curr);
+    done.insert(curr);
+}
+inline void init() {
+    done.clear();
+    adj.assign(n + 1, vector<int>());
+    adj[root].eb(n);
+    adj[n].eb(root);
+    sums[n] = 0;
+}
+inline void solve() {
+    cin >> n; init();
+    for (int i = 0; i < n; i++)
+        cin >> sums[i];
+    for (int i = 1; i < n; i++) {
+        int x, y;
+        cin >> x >> y;
+        x--, y--;
+        adj[x].eb(y);
+        adj[y].eb(x);
+    }
+    sizes(root);
+    ans = tot = sums[root];
+    dfs(root);
+    if (ans == tot) ans = -1;
+    cout << ans << endl;
+}
+int main() {
+    int q; cin >> q;
+    while (q--) solve();
+}
+
+
+15)	JENNYS SUBTREE
+
+#include <bits/stdc++.h>
+using namespace std;
+const int N=5500;
+const long long P=1000000007;
+
+vector <int> pr,pr2;
+
+vector <int> v[N+1];
+int f[N+1],F,FR[N+1];
+int n,r;
+int fa,fad;
+
+void input(){
+    scanf("%d%d",&n,&r);
+    for (int i=1;i<n;i++){
+        int x,y;
+        scanf("%d%d",&x,&y);
+        v[x].push_back(y);
+        v[y].push_back(x);
+    }
+}
+
+void go(int x,int fr,int deep){
+    f[x]=F;
+    if (deep==r) return;
+    for (int i=0;i<v[x].size();i++)
+    if (v[x][i]!=fr)
+        go(v[x][i],x,deep+1);
+}
+
+void dfs(int x,int fr,int dis){
+    FR[x]=fr;
+    if (dis>fad) fad=dis,fa=x;
+    for (int i=0;i<v[x].size();i++)
+    if (v[x][i]!=fr && f[v[x][i]]==F)
+        dfs(v[x][i],x,dis+1);
+}
+
+long long geth(int x,int fr,int deep){
+    vector <long long > h;
+    for (int i=0;i<v[x].size();i++)
+    if (v[x][i]!=fr && f[v[x][i]]==F)
+        h.push_back(geth(v[x][i],x,deep+1));
+    sort(h.begin(),h.end());
+    long long hr=pr[deep];
+    for (int i=0;i<h.size();i++)
+    hr = (hr * pr2[deep] + h[i])%P;
+    return hr;
+}
+
+long long get(int I){
+    F++;
+    go(I,I,0);
+
+    fa=fad=0;
+    dfs(I,I,0);
+
+    fad=0;
+    dfs(fa,fa,0);
+    int din=fad;
+
+    long long hasR=1;
+    while (din>=0){
+        if ((fad%2==0 && din==fad/2) || (fad%2==1 && (din==fad/2 || din==(fad+1)/2)))
+            hasR*=geth(fa,fa,0);
+        fa=FR[fa];
+        din--;
+    }
+    return hasR;
+}
+
+bool ispr(int x){
+    for (int i=2;i*i<=x;i++)
+    if (x%i==0) return 0;
+    return 1;
+}
+
+void sol(){
+
+    int x=400;
+    while (pr.size()<=n){
+        while (!ispr(x)) x++;
+        pr.push_back(x++);
+        while (!ispr(x)) x++;
+        pr2.push_back(x++);
+    }
+
+    set <long long> S;
+    for (int i=1;i<=n;i++)
+        S.insert(get(i));
+    printf("%d\n",int(S.size()));
+}
+
+int main() {
+    input();
+    sol();
+    return 0;
+}
+
+
+16)	TREE COORDINATE 
+
+
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<vector>
+#define fo(i,a,b) for(int i=a;i<=b;i++)
+#define fd(i,a,b) for(int i=a;i>=b;i--)
+using namespace std;
+const int N=100100,up=18;
+int fa[N][up+1];
+int st[N],en[N*2],nexp[N*2],edge,d[N],height[N],ans;
+vector<int>a[N];
+void insert(int x,int y)
+{
+    nexp[++edge]=st[x];
+    st[x]=edge;
+    en[edge]=y;
+}
+int lca(int x,int y)
+{
+    if (height[x]<height[y]) swap(x,y);
+    fd(i,up,0)
+    if (height[fa[x][i]]>=height[y]) x=fa[x][i];
+    if (x==y) return x;
+    fd(i,up,0)
+    if (fa[x][i]!=fa[y][i]) x=fa[x][i],y=fa[y][i];
+    return fa[x][0];
+}
+int dis(int x,int y)
+{
+    int l=lca(x,y);
+    return height[x]+height[y]-2*height[l];
+}
+struct node{
+    int x,addx,y,addy;
+};
+void add(node &re,int x,int addx)
+{
+    int xx=dis(re.x,x)+re.addx+addx,
+        yy=dis(re.y,x)+re.addy+addx,
+        zz=dis(re.x,re.y)+re.addx+re.addy;
+    if (zz>=xx && zz>=yy) return;
+    if (xx>yy) re.y=x,re.addy=addx; else
+    re.x=x,re.addx=addx;
+}
+node dfs(int now)
+{
+    node re;
+    re.x=1,re.y=1,re.addx=re.addy=-10000000;
+    fo(i,0,(int)a[now].size()-1) add(re,a[now][i],height[now]);
+    ans=max(ans,dis(re.x,re.y)+re.addx+re.addy-2*height[now]);
+    for(int i=st[now];i;i=nexp[i])
+    if (en[i]!=fa[now][0])
+    {
+        node tmp=dfs(en[i]);
+        ans=max(ans,dis(re.x,tmp.x)+re.addx+tmp.addx-2*height[now]);
+        ans=max(ans,dis(re.y,tmp.x)+re.addy+tmp.addx-2*height[now]);
+        ans=max(ans,dis(re.x,tmp.y)+re.addx+tmp.addy-2*height[now]);
+        ans=max(ans,dis(re.y,tmp.y)+re.addy+tmp.addy-2*height[now]);
+        add(re,tmp.x,tmp.addx);
+        add(re,tmp.y,tmp.addy);
+    }
+    return re;
+}
+int main()
+{
+    int n,m;
+    scanf("%d%d",&n,&m);
+    fo(i,1,n-1)
+    {
+        int x,y;
+        scanf("%d%d",&x,&y);
+        insert(x,y);
+        insert(y,x);
+    }
+    fo(i,1,m)
+    {
+        int x,y;
+        scanf("%d%d",&x,&y);
+        a[x].push_back(y);
+    }
+    d[1]=1;
+    fa[1][0]=1;
+    int top=1;
+    fo(i,1,n)
+    {
+        int now=d[i];
+        fo(j,1,up) fa[now][j]=fa[fa[now][j-1]][j-1];
+        for(int j=st[now];j;j=nexp[j])
+        if (en[j]!=fa[now][0])
+        {
+            fa[en[j]][0]=now;
+            height[en[j]]=height[now]+1;
+            d[++top]=en[j];
+        }
+    }
+    dfs(1);
+    printf("%d\n",ans);
+} 
+
+
+17)	ARRAY PAIR DISCUSSION 
+
+
