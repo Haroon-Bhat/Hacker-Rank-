@@ -1,0 +1,355 @@
+1)	Merging Communities 
+  #include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int findset(int x, vector <int> &r) {
+    // we compress path here too
+    if (r[x]!=x) r[x]=findset(r[x],r);
+    return(r[x]);   
+}
+
+int main() {
+    int n,q;
+    cin >> n >> q;
+    
+    // makeset
+    vector <int> root(n+1);
+    vector <int> count(n+1);
+    for (int i=1;i<=n;i++) {
+        root[i]=i;
+        count[i]=1;
+    }    
+    
+    while (q--) {
+        char t;
+        cin >> t;
+        
+        if (t=='M') {
+            int x,y;
+            cin >> x >> y;   
+            
+            // find root of x & y
+            int rx=findset(x,root);
+            int ry=findset(y,root);
+       
+            // skip, already in same community
+            if (rx==ry) continue;
+ 
+            // do a union not using ranking 
+            root[rx]=ry;
+            count[ry]+=count[rx];
+            count[rx]=0;
+        }
+        else if (t=='Q') {
+            int p;
+            cin >> p;
+            cout << count[findset(p,root)] << endl;
+        }
+    }
+
+    return 0;
+}
+
+
+2)	 Kundu and Tree
+ 
+
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;      
+
+class DisjointSet {
+    DisjointSet parent = this;
+    int size = 1;
+    
+    DisjointSet findRoot() {
+        if (parent != this) {
+            // path compression
+            parent = parent.findRoot();
+        }
+        
+        return parent;
+    }
+    
+    void union(DisjointSet other) {
+        if (other == this) return;
+        
+        DisjointSet root = findRoot();
+        DisjointSet otherRoot = other.findRoot();
+        
+        if (otherRoot == root) return;
+        
+        // union by size
+        if (root.size >= otherRoot.size) {
+            otherRoot.parent = root;
+            root.size += otherRoot.size;
+        }
+        else {
+            root.parent = otherRoot;
+            otherRoot.size += root.size;
+        }
+    }
+}
+
+public class Solution {
+    final static long mod = 1_000_000_007;
+    
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        int n = scanner.nextInt();
+        DisjointSet[] components = new DisjointSet[n + 1];
+        
+        for (int i = 0; i < n - 1; i++) {
+            int a = scanner.nextInt();
+            int b = scanner.nextInt();
+            char color = scanner.next().charAt(0);
+            
+            // ignore red edges
+            if (color == 'r') continue;
+            
+            DisjointSet aComponent = createComponentIfNeeded(components, a);
+            DisjointSet bComponent = createComponentIfNeeded(components, b);
+            
+            aComponent.union(bComponent);
+        }
+        
+        // uniquify components
+        Set<DisjointSet> uniqueComponents = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            DisjointSet component = components[i];
+            
+            if (component != null) {
+                uniqueComponents.add(component.findRoot());
+            }
+        }
+        
+        long validTriplets = choose3from(n); // all possible triplets
+        
+        for (DisjointSet component : uniqueComponents) {
+            // subtract all triplets within the components
+            validTriplets -= choose3from(component.size);
+            
+            // subtract all triplets build from 2 vertices of the components and 1 other vertex
+            validTriplets -= choose2from(component.size) * (n - component.size);
+        }
+        
+        // apply modulo for some reason beyond my imagination
+        System.out.println(validTriplets % mod);
+    }
+    
+    // lazily create a component
+    static DisjointSet createComponentIfNeeded(DisjointSet[] components, int index) {
+        if (components[index] == null) {
+            components[index] = new DisjointSet();
+        }
+        
+        return components[index];
+    }
+    
+    // optimized calculation of binom(n, 3)
+    static long choose3from(int n) {
+        if (n < 3) return 0;
+        
+        // k = 3
+        // n! / ( k! (n-k)! ) = (n-k+1) * ... * n / k! = (n - 2) * ... * n / 6
+        
+        long res = 1;
+        for (int x = n - 2; x <= n; x++) {
+            res *= x;
+        }
+        
+        return res / 6;
+    }
+    
+    // optimized calculation of binom(n, 2)
+    static long choose2from(int n) {
+        if (n < 2) return 0;
+        
+        // k = 2
+        // n! / (k! (n-k)!) = (n-k+1) * ... * n / k! = (n - 1) * ... * n / 2
+        
+        long res = 1;
+        for (int x = n - 1; x <= n; x++) {
+            res *= x;
+        }
+        
+        return res / 2;
+    }
+}
+
+
+3)	 Super Maximum Cost Queries 
+
+#include<iostream>
+#include<vector>
+
+using namespace std;
+//edge
+struct Edge
+{
+	int dot1, dot2, weight;
+};
+//for qsort 
+int compare(const void *a, const void *b) 
+{
+	Edge* e1 = (Edge*)a;
+	Edge* e2 = (Edge*)b;
+	return e1->weight - e2->weight;
+}
+//number of paths whos weight is no bigger than weight.
+struct WeightPaths
+{
+	long long weight, paths;
+};
+//disjoint set's find 
+int find_root(vector<int> &v, int x)
+{
+	if (v[x] == x)
+		return x;
+	else
+	{
+		v[x] = find_root(v, v[x]);  
+		return v[x];
+	}
+}
+//binary search
+long long search(vector<WeightPaths> &weightPaths, int n) 
+{
+	int min = 0, max = weightPaths.size() - 1;
+	long long result = 0;
+	while (true)
+	{
+		if (max - min <= 1)
+			break;
+		int mean = (min + max) / 2;
+		if (weightPaths[mean].weight > n)
+			max = mean;
+		else
+			min = mean;
+	}
+	if (weightPaths[max].weight <= n)
+		result = weightPaths[max].paths;
+	else
+		result = weightPaths[min].paths;
+	return result;
+}
+
+int main()
+{
+	int n, q;
+	cin >> n >> q;
+	Edge * Edges = new Edge[n - 1];
+	for (int i = 0;i < n - 1;i++)
+		cin >> Edges[i].dot1 >> Edges[i].dot2 >> Edges[i].weight;
+	qsort(Edges, n - 1, sizeof(Edge), compare); //sort
+
+	vector<WeightPaths> weightPaths;  
+	WeightPaths wp;
+	wp.weight = 0;
+	wp.paths = 0;
+	weightPaths.push_back(wp);
+
+	vector<int> root(n + 1), count(n + 1);  //disjoint set
+	for (int i = 1;i < n + 1;i++)
+	{
+		root[i] = i;
+		count[i] = 1;
+	}
+	int k = 0;
+	while (k<n-1)
+	{
+		wp.weight = Edges[k].weight;
+		while (k<n - 1 && Edges[k].weight == wp.weight)
+		{
+			int dot1 = Edges[k].dot1;
+			int dot2 = Edges[k].dot2;
+			int r1, r2;
+			r1 = find_root(root, dot1);
+			r2 = find_root(root, dot2);
+			if (r1 != r2)
+			{
+				wp.paths += (long long)count[r2] * count[r1];  // caculate new paths
+				root[r2] = r1;   
+				count[r1] += count[r2];
+				count[r2] = 0;
+			}
+			k++;
+		}
+		weightPaths.push_back(wp);
+	}
+	while (q--)
+	{
+		int l, r;
+		cin >> l >> r;
+		long long ln, rn, p;
+		ln = search(weightPaths, l - 1);
+		rn = search(weightPaths, r);
+		p = rn - ln;
+		cout << p << endl;
+	}
+	return 0;
+}
+
+
+4)Components in a Graph
+
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+int findset(int x, vector <int> &r) {
+    if (r[x]==x) return(x);
+    else return(findset(r[x],r));
+}
+
+int main() {
+    int n;
+    cin >> n;
+    
+    // init
+    vector <int> root(2*n+1);
+    vector <int> count(2*n+1);
+    for (int i=1;i<=2*n;i++) {
+        root[i]=i;
+        count[i]=1;
+    }    
+    
+    for (int i=0;i<n;i++) {
+        int g,b;
+        cin >> g >> b;
+        
+        // find root of g & b
+        int rg=findset(g,root);
+        int rb=findset(b,root);       
+        if (rg==rb) continue;
+        
+        // union without ranking
+        root[rb]=rg;
+        count[rg]+=count[rb];
+        count[rb]=0;
+    }
+    
+    // find min and max
+    int min=2*n+1;
+    int max=0;    
+    for (int i=1;i<=2*n;i++) {
+        if (count[i]>1 && count[i]<min) min=count[i];
+        if (count[i]>max) max=count[i];
+    }   
+    cout << min << " "  << max;
+    
+    return 0;
+}
+
+
+
+
