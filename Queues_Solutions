@@ -1,0 +1,282 @@
+1)QUEUE USING TWO STACKS 
+
+#include <stack>
+#include <iostream>
+using namespace std;
+
+int main() {
+    stack<int> Front,Rear;
+    int Q;
+    cin >> Q;
+    while(Q--)
+    {
+        int type, x;
+        cin >> type;
+        if(type == 1)
+        {
+            cin >> x;
+            Rear.push(x);
+        }    
+        else 
+        {
+           if(Front.empty())
+           { // move all the elements from "Rear" stack to "Front" stack
+               while(!Rear.empty())
+               {
+                   Front.push(Rear.top());
+                   Rear.pop();
+               }   
+            }    
+           if(!Front.empty())
+           {
+               if(type == 2) Front.pop();
+               if(type == 3) cout << Front.top() << endl;
+           }  
+        }   
+    }    
+    return 0;
+}
+
+
+2)  CASTLE ON THE GRID 
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+vector<string> split_string(string);
+
+struct Node
+{
+    int x;
+    int y;
+    int steps;
+    Node(){ x=y=steps=0;}
+    Node(int inx,int iny,int insteps){ x=inx; y=iny; steps=insteps;}
+};
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */  
+    int N;
+    cin >> N;
+    bool **board = new bool *[N];
+    for(int i=0;i<N;i++)
+        board[i] = new bool [N];
+    
+    for(int i=0;i<N;i++)
+        for(int j=0;j<N;j++)
+        {
+            char type;
+            cin >> type;
+            if(type=='X')
+                board[i][j] = false;
+            else if(type=='.')
+                board[i][j] = true;
+        }
+    int beginx, beginy, endx, endy;
+    cin >> beginx >> beginy >> endx >> endy;
+    Node begin(beginx,beginy,0);
+    
+    int *way = new int [2*N-1];
+    for(int i=0;i<N;i++)//0,-1,-2,...,-(N-1)
+        way[i] = -i;
+    for(int i=N;i<2*N-1;i++)//1,2,...,N-1
+        way[i] = i-N+1;
+    
+    queue<Node> q;
+    q.push(begin);
+    int min = 1e7;
+    while(!q.empty())
+    {
+        Node cur = q.front();
+        q.pop();
+        
+        if(!board[cur.x][cur.y])
+            continue;
+        board[cur.x][cur.y] = false;
+        if(cur.x==endx && cur.y==endy && cur.steps<min)
+            min = cur.steps;
+        
+        for(int dir=0;dir<2;dir++) //0:vertical(x changes),1:honrizonal(y changes)
+            for(int i=1;i<2*N-1 && (dir==0?cur.x:cur.y)+way[i]<N;i++)
+            {
+                if((dir==0?cur.x:cur.y)+way[i]<0)
+                {
+                    i = N-1;
+                    continue;
+                }
+                
+                if(board[cur.x+way[dir==0?i:0]][cur.y+way[dir==1?i:0]])
+                {
+                    Node n(cur.x+way[dir==0?i:0], cur.y+way[dir==1?i:0], cur.steps+1);
+                    q.push(n);
+                }
+                else if(!board[cur.x+way[dir==0?i:0]][cur.y+way[dir==1?i:0]])
+                {
+                    if(i<N)//jump left/up
+                    {
+                        i = N-1;
+                        continue;
+                    }
+                    else if(i>=N)//jump right/down
+                        break;
+                }
+                
+            }
+    }
+
+    cout << min << endl;
+    
+    return 0;
+}
+
+3) DOWN TO ZERO 
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main() {
+    int max = 1000001;
+    int nums[max];
+    
+    //Initialize array
+    for(int i = 0; i < max; ++i) nums[i] = -1;
+    nums[0] = 0; nums[1] = 1; nums[2] = 2; nums[3] = 3;
+    
+    //Precompute
+    for(int i = 0; i < max; ++i){
+        if(nums[i] == -1 || nums[i] > (nums[i - 1] + 1))
+            nums[i] = nums[i - 1] + 1;
+        for(int j = 1; j <= i && j * i < max; ++j)
+            if(nums[j * i] == -1 || (nums[i] + 1) < nums[j * i])
+                nums[j * i] = nums[i] + 1;
+    }
+    
+    //Example for 1st 20
+    //for(int i = 0; i < 21; ++i)
+        //cout << "Min for " << i << " is " << nums[i] << endl;
+    
+    int q; cin >> q;
+    for(int i = 0; i < q; ++i){
+        int n; cin >> n;
+        cout << nums[n] << endl;
+    }
+    return 0;
+}
+
+
+
+4)  TRUCK TOUR 
+
+#include <bits/stdc++.h>
+
+using namespace std;
+
+
+int main()
+{
+    unsigned int n;
+    cin >> n;
+    long long tank = 0;
+    unsigned int pump =    0;
+    for (unsigned int i = 0; i < n; ++i)
+        {
+        unsigned int liters;
+        unsigned int kilometers;
+        cin >> liters >> kilometers;
+    tank +=    (long long) (unsigned long long) liters -
+                (long long) (unsigned long long) kilometers;
+        if (tank < 0)
+            {
+            pump = i + 1;
+            tank = 0;
+            }
+        }
+    cout << pump << endl;
+}
+
+
+
+OR 
+
+
+struct gasStation {
+    int gas;
+    int next;
+};
+
+int main() {
+    int N;
+    cin >> N;
+    queue <struct gasStation> route;
+    for (int i = 0; i < N; i++) {
+        struct gasStation st;
+        cin >> st.gas >> st.next;
+        route.push(st);
+    }
+    int start = 0, passed = 0,  gas = 0;
+    while (passed < N) {
+        struct gasStation st = route.front();
+        gas += st.gas;
+        route.pop();
+
+        if (gas >= st.next) {
+            passed += 1;
+            gas -= st.next;
+        } else {
+            start += passed + 1;
+            passed = 0; gas = 0;
+        }
+        route.push(st);
+    }
+    cout << start << endl;
+    
+    return 0;
+}
+
+
+5)  QUERIES WITH FIXED LENGTH
+
+#include<bits/stdc++.h>
+using namespace std;
+int minofmax(vector<int> arr, int n, int k)
+{
+    int mini=1e7;
+    std::deque<int>  Qi(k);
+    int i;
+    for (i = 0; i < k; ++i)
+    {
+        while ( (!Qi.empty()) && arr[i] >= arr[Qi.back()])
+            Qi.pop_back();
+        Qi.push_back(i);
+    }
+    for ( ; i < n; ++i)
+    {
+           mini=min(mini,arr[Qi.front()]);
+        while ( (!Qi.empty()) && Qi.front() <= i - k)
+            Qi.pop_front();
+        while ( (!Qi.empty()) && arr[i] >= arr[Qi.back()])
+            Qi.pop_back();
+        Qi.push_back(i);
+    }
+     mini=min(mini,arr[Qi.front()]);
+     return mini;
+}
+int main()
+{
+ int n,q;
+ cin>>n>>q;
+ vector<int> arr(n);
+ for(int i=0;i<n;i++)
+    cin>>arr[i];
+ while(q--)
+ {
+     int k;
+     cin>>k;
+     cout<<minofmax(arr,n,k)<<"\n";
+ }
+}
+
+
+
+
